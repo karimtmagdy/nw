@@ -1,8 +1,8 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const path = require("path");
 
 // Initialize Express app
 const app = express();
@@ -12,23 +12,25 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://your-mongodb-connection-string';
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected successfully'))
-.catch(err => console.error('MongoDB connection error:', err));
+const MONGODB_URI = process.env.MONGO_URI;
+const db = process.env.DB_PASSWORD
+mongoose
+  .connect(MONGODB_URI.replace("<PASSWORD>",String(db)), {
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // API Routes
-app.use('/api/categories', require('./api/routes/categoryRoutes'));
-app.use('/api/services', require('./api/routes/serviceRoutes'));
-app.use('/api/users', require('./api/routes/userRoutes'));
-app.get('/', (req, res) => {
-  res.send('API is running');
+app.use("/api/categories", require("./api/routes/categoryRoutes"));
+app.use("/api/services", require("./api/routes/serviceRoutes"));
+app.use("/api/users", require("./api/routes/userRoutes"));
+app.get("/", (req, res) => {
+  res.send("API is running");
 });
-app.get('/api', (req, res) => {
-  res.send('API is running');
+app.get("/api", (req, res) => {
+  res.send("API is running");
 });
 // Create folder structure
 const PORT = process.env.PORT || 3000;
