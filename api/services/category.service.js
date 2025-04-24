@@ -1,18 +1,16 @@
 const { Category } = require("../models/Category");
 const { fn, paginate } = require("../lib/utils");
+const { AppError } = require("../middleware/errorHandler");
 
 // @route   POST api/v1/categories
 // @desc    Create a category
 // @access  Private/Admin
-exports.createCategory = fn(async (req, res) => {
+exports.createCategory = fn(async (req, res, next) => {
   const { name } = req.body;
   // Check if category already exists
   let category = await Category.findOne({ name });
-  if (category) {
-    return res.status(400).json({ msg: "Category already exists" });
-  }
+  if (category) return next(new AppError("Category already exists", 400));
   category = await Category.create({ name });
-
   await category.save();
   res.status(201).json({
     message: "category created successfully",
@@ -23,17 +21,15 @@ exports.createCategory = fn(async (req, res) => {
 // @route   GET api/v1/categories
 // @desc    Get all categories
 // @access  Public
-exports.getAllCategories = fn(async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+exports.getAllCategories = fn(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
   const result = await paginate(Category, req.query, page, limit, {
-  //     isActive: true,
+    //     isActive: true,
   });
   result.categories = result.data;
-    delete result.data;
-    if (!result) {
-      return res.status(404).json({ msg: "No categories found" });
-    }
+  delete result.data;
+  if (!result) return next(new AppError("No categories found", 404));
   res.status(200).json(result);
 });
 
@@ -54,19 +50,12 @@ exports.updateCategory = fn(async (req, res, next) => {
     { $set: categoryFields },
     { new: true, runValidators: true }
   );
-  if (!category) {
-    return res.status(404).json({ msg: "Category not found" });
-  }
-  // const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-  //   new: true,
-  //   runValidators: true,
-  // });
-  // if (!category) {
-  //   return next(new AppError("Category not found", 404));
-  // }
+  if (!category) return next(new AppError("Category not found", 404));
+  await category.save();
   res.status(200).json({
     status: "success",
-    data: category,
+    msg: "category updated successfully",
+    category,
   });
 });
 
@@ -75,10 +64,7 @@ exports.updateCategory = fn(async (req, res, next) => {
 // @access  Public
 exports.getCategoryById = fn(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
-  if (!category) {
-    //   return next(new AppError("Category not found", 404));
-    return res.status(404).json({ msg: "Category not found" });
-  }
+  if (!category) return next(new AppError("Category not found", 404));
   res.status(200).json({
     status: "success",
     category,
@@ -90,14 +76,11 @@ exports.getCategoryById = fn(async (req, res, next) => {
 // @access  Private/Admin
 exports.deleteCategory = fn(async (req, res, next) => {
   const category = await Category.findByIdAndDelete(req.params.id);
-  if (!category) {
-    return res.status(404).json({ msg: "Category not found" });
-    //   return next(new AppError("Category not found", 404));
-  }
+  if (!category) return next(new AppError("Category not found", 404));
   //   if (err.kind === "ObjectId") {
   //     return res.status(404).json({ msg: "Category not found" });
   //   }
-  await category.remove();
+  // await category.remove();
   res.status(200).json({
     status: "success",
     msg: "Category removed",

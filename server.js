@@ -6,7 +6,7 @@ const cors = require("cors");
 const path = require("path");
 const { connectDB } = require("./api/config/db");
 const { handler } = require("./api/routes");
-const { errorHandler } = require("./api/middleware/errorHandler");
+const { errorHandler, AppError } = require("./api/middleware/errorHandler");
 // Initialize Express app
 const app = express();
 
@@ -20,14 +20,21 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 connectDB();
 // API Routes
 handler(app);
-// app.use("/api/categories", require("./api/routes/categoryRoutes"));
-app.use("/api/services", require("./api/routes/serviceRoutes"));
-app.use("/api/users", require("./api/routes/userRoutes"));
+// app.use("/api/services", require("./api/routes/serviceRoutes"));
+// app.use("/api/users", require("./api/routes/userRoutes"));
 app.get("/", (req, res) => {
   res.send("Hello from API Express on Vercel");
 });
 app.get("/api", (req, res) => {
   res.send("API is running");
+});
+// Handle unhandled routes
+app.use((req, res, next) => {
+  const error = new AppError(
+    `Can't find ${req.originalUrl} on this server!`,
+    404
+  );
+  next(error);
 });
 // Global error handling middleware (add this after all routes)
 app.use(errorHandler);
