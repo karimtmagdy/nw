@@ -28,7 +28,7 @@ exports.getAllCategories = fn(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const result = await paginate(Category, req.query, page, limit, {
-    //   isActive: true,
+      isActive: true,
   });
   result.categories = result.data;
   delete result.data;
