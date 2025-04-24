@@ -24,7 +24,12 @@ mongoose.connect(MONGODB_URI, {
 app.use('/api/categories', require('./api/routes/categoryRoutes'));
 app.use('/api/services', require('./api/routes/serviceRoutes'));
 app.use('/api/users', require('./api/routes/userRoutes'));
-
+app.get('/', (req, res) => {
+  res.send('API is running');
+});
+app.get('/api', (req, res) => {
+  res.send('API is running');
+});
 // Create folder structure
 const PORT = process.env.PORT || 3000;
 
