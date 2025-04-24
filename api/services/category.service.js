@@ -1,5 +1,5 @@
 const { Category } = require("../models/Category");
-const { fn, paginate } = require("../lib/utils");
+const { fn } = require("../lib/utils");
 
 // @route   POST api/v1/categories
 // @desc    Create a category
@@ -24,15 +24,15 @@ exports.createCategory = fn(async (req, res) => {
 // @desc    Get all categories
 // @access  Public
 exports.getAllCategories = fn(async (req, res) => {
-  // const categories = await Category.find({});
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const result = await paginate(Category, req.query, page, limit, {
-      isActive: true,
-  });
-  result.categories = result.data;
+  const categories = await Category.find({});
+  //   const result = await paginate(Category, req.query, page, limit, {
+  //       isActive: true,
+  //   });
+  //   result.categories = result.data;
   delete result.data;
-  res.status(200).json(result);
+  res.status(200).json(categories);
 });
 
 // @route   PUT api/v1/categories/:id
