@@ -26,7 +26,6 @@ exports.createCategory = fn(async (req, res) => {
 exports.getAllCategories = fn(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-//   const categories = await Category.find().exec();
   const result = await paginate(Category, req.query, page, limit, {
   //     isActive: true,
   });

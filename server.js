@@ -6,7 +6,7 @@ const cors = require("cors");
 const path = require("path");
 const { connectDB } = require("./api/config/db");
 const { handler } = require("./api/routes");
-
+const { errorHandler } = require("./api/middleware/errorHandler");
 // Initialize Express app
 const app = express();
 
@@ -29,6 +29,8 @@ app.get("/", (req, res) => {
 app.get("/api", (req, res) => {
   res.send("API is running");
 });
+// Global error handling middleware (add this after all routes)
+app.use(errorHandler);
 // Create folder structure
 const PORT = process.env.PORT || 8000;
 
