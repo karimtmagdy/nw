@@ -1,7 +1,7 @@
 {
   "name": "newave-store",
   "version": "1.0.0",
-  "description": "E-commerce website with MongoDB, Express, React, and Node.js",
+  "description": "E-commerce website with MongoDB, Express, and Node.js",
   "main": "server.js",
   "scripts": {
     "start": "node --trace-warnings server.js",
@@ -25,6 +25,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/karimtmagdy/nw.git"
+    "url": "https://github.com/karimtmagdy/nw-ex.git"
   }
 }

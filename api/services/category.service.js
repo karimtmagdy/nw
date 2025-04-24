@@ -13,8 +13,8 @@ exports.createCategory = fn(async (req, res, next) => {
   category = await Category.create({ name });
   await category.save();
   res.status(201).json({
-    message: "category created successfully",
     status: "success",
+    message: "category created successfully",
     category,
   });
 });
@@ -54,7 +54,7 @@ exports.updateCategory = fn(async (req, res, next) => {
   await category.save();
   res.status(200).json({
     status: "success",
-    msg: "category updated successfully",
+    message: "category updated successfully",
     category,
   });
 });
@@ -80,9 +80,9 @@ exports.deleteCategory = fn(async (req, res, next) => {
   //   if (err.kind === "ObjectId") {
   //     return res.status(404).json({ msg: "Category not found" });
   //   }
-  // await category.remove();
+
   res.status(200).json({
     status: "success",
-    msg: "Category removed",
+    message: "Category removed",
   });
 });

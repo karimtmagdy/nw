@@ -8,6 +8,23 @@ const jwt = require("jsonwebtoken");
 // @access  Public
 exports.register = fn(async (req, res, next) => {
   const { username, email, password } = req.body;
+  const existingUser = await User.findOne({ username, email });
+  if (existingUser) return next(new AppError("User already exists", 400));
+  const user = await User.create({
+    username,
+    email,
+    password,
+  });
+  await user.save();
+  res.status(201).json({
+    status: "success",
+    message: "User created successfully",
+    user: {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    },
+  });
 });
 
 // @route   POST api/v1/auth/sign-in
@@ -20,7 +37,7 @@ exports.login = fn(async (req, res, next) => {
   if (!user) return next(new AppError("Invalid credentials", 400));
   // Check password
   const isMatch = await user.comparePassword(password);
-  if (!isMatch) return next(new AppError("Invalid credentials", 400));
+  if (!isMatch) return next(new AppError("Invalid email or password", 400));
   // Create JWT token
   const payload = {
     id: user.id,
@@ -43,7 +60,9 @@ exports.login = fn(async (req, res, next) => {
       if (err) throw err;
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
       });
     }
   );
@@ -51,7 +70,7 @@ exports.login = fn(async (req, res, next) => {
   user.isOnline = "online";
   user.last_login = new Date();
   await user.save();
-  res.json({
+  res.status(200).json({
     status: "success",
     message: "Logged in successfully",
     token,
