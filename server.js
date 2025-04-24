@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const path = require("path");
 const { connectDB } = require("./api/config/db");
+const { handler } = require("./api/routes");
 
 // Initialize Express app
 const app = express();
@@ -13,11 +14,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 connectDB();
 // API Routes
-app.use("/api/categories", require("./api/routes/categoryRoutes"));
+handler(app);
+// app.use("/api/categories", require("./api/routes/categoryRoutes"));
 app.use("/api/services", require("./api/routes/serviceRoutes"));
 app.use("/api/users", require("./api/routes/userRoutes"));
 app.get("/", (req, res) => {
