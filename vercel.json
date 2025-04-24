@@ -16,8 +16,8 @@
       "dest": "server.js"
     }
   ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret"
-  }
+ "env": {
+  "MONGODB_URI": "mongodb+srv://your-actual-connection-string",
+  "JWT_SECRET": "your-actual-secret-key"
+}
 }
