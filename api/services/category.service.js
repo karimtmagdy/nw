@@ -1,5 +1,5 @@
 const { Category } = require("../models/Category");
-const { fn } = require("../lib/utils");
+const { fn, paginate } = require("../lib/utils");
 
 // @route   POST api/v1/categories
 // @desc    Create a category
@@ -24,15 +24,18 @@ exports.createCategory = fn(async (req, res) => {
 // @desc    Get all categories
 // @access  Public
 exports.getAllCategories = fn(async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const categories = await Category.find({});
-  //   const result = await paginate(Category, req.query, page, limit, {
-  //       isActive: true,
-  //   });
-  //   result.categories = result.data;
-  delete result.data;
-  res.status(200).json(categories);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+//   const categories = await Category.find().exec();
+  const result = await paginate(Category, req.query, page, limit, {
+  //     isActive: true,
+  });
+  result.categories = result.data;
+    delete result.data;
+    if (!result) {
+      return res.status(404).json({ msg: "No categories found" });
+    }
+  res.status(200).json(result);
 });
 
 // @route   PUT api/v1/categories/:id
