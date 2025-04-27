@@ -81,3 +81,28 @@ exports.login = fn(async (req, res, next) => {
     },
   });
 });
+// @route   POST api/v1/auth/sign-in
+// @desc    Authenticate user & get token
+// @access  Public
+exports.logout = fn(async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  const cookie = req.cookies.refreshToken;
+    const decoded = jwt.decode(token, { complete: true });
+  const user = await User.findOne({ email: decoded.payload.email }).exec();
+  user.active = false;
+  user.isOnline = "offline";
+  await user.save();
+  if (!cookie)
+    return res
+      .status(400)
+      .json({ status: "fail", message: "Already logged out" });
+
+  res.cookie("refreshToken", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({
+    status: "success",
+    message: "Logged out successfully",
+  });
+});

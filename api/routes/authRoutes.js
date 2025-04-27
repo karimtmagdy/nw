@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { login, register } = require("../services/auth.service");
+const { login, register, logout } = require("../services/auth.service");
 const {
   validateLogin,
   validateRegister,
@@ -9,5 +9,6 @@ const {
 
 router.post("/sign-up", validateRegister, register);
 router.post("/sign-in", validateLogin, login);
+router.post("/sign-out", logout);
 
 module.exports = router;
