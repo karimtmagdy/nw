@@ -40,7 +40,7 @@ exports.login = fn(async (req, res, next) => {
   if (!isMatch) return next(new AppError("Invalid email or password", 400));
   // Create JWT token
   const payload = {
-    id: user.id,
+    id: user._id,
     email: user.email,
     role: user.role,
   };
@@ -52,6 +52,7 @@ exports.login = fn(async (req, res, next) => {
   //     expiresIn: "24h",
   //   });
   // user.refreshToken = refreshToken;
+  console.log(token)
   jwt.sign(
     payload,
     process.env.JWT_REFRESH_SECRET,
@@ -87,8 +88,10 @@ exports.login = fn(async (req, res, next) => {
 exports.logout = fn(async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   const cookie = req.cookies.refreshToken;
-    const decoded = jwt.decode(token, { complete: true });
-  const user = await User.findOne({ email: decoded.payload.email }).exec();
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const user = await User.findOne({ email: decoded.email }).exec();
+  console.log(decoded);
+  console.log(token)
   user.active = false;
   user.isOnline = "offline";
   await user.save();
