@@ -40,7 +40,7 @@ exports.login = fn(async (req, res, next) => {
   if (!isMatch) return next(new AppError("Invalid email or password", 400));
   // Create JWT token
   const payload = {
-    id: user._id,
+    _id: user._id,
     email: user.email,
     role: user.role,
   };
@@ -76,7 +76,7 @@ exports.login = fn(async (req, res, next) => {
     message: "Logged in successfully",
     token,
     user: {
-      id: user._id,
+      _id: user._id,
       username: user.username,
       email: user.email,
     },
@@ -90,8 +90,6 @@ exports.logout = fn(async (req, res, next) => {
   const cookie = req.cookies.refreshToken;
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const user = await User.findOne({ email: decoded.email }).exec();
-  console.log(decoded);
-  console.log(token)
   user.active = false;
   user.isOnline = "offline";
   await user.save();
@@ -103,6 +101,7 @@ exports.logout = fn(async (req, res, next) => {
   res.cookie("refreshToken", "", {
     httpOnly: true,
     expires: new Date(0),
+    sameSite: "strict",
   });
   res.status(200).json({
     status: "success",
