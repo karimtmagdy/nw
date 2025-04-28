@@ -90,6 +90,7 @@ const UserSchema = new mongoose.Schema(
       default: undefined,
       sparse: true,
     },
+    tags: [{ type: mongoose.Types.ObjectId, ref: "tag", sparse: true }],
     cart: [{ type: mongoose.Types.ObjectId, ref: "cart", sparse: true }],
     orders: [{ type: mongoose.Types.ObjectId, ref: "order", sparse: true }],
   },

@@ -11,7 +11,7 @@ const { errorHandler, AppError } = require("./api/middleware/errorHandler");
 const app = express();
 
 // Middleware
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

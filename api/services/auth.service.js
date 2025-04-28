@@ -20,7 +20,7 @@ exports.register = fn(async (req, res, next) => {
     status: "success",
     message: "User created successfully",
     user: {
-      id: user._id,
+      _id: user._id,
       username: user.username,
       email: user.email,
     },
@@ -52,7 +52,6 @@ exports.login = fn(async (req, res, next) => {
   //     expiresIn: "24h",
   //   });
   // user.refreshToken = refreshToken;
-  console.log(token)
   jwt.sign(
     payload,
     process.env.JWT_REFRESH_SECRET,
