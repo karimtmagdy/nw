@@ -1,18 +1,17 @@
 const jwt = require("jsonwebtoken");
 const { AppError } = require("./errorHandler");
 const { User } = require("../models/User");
-const { fn } = require("../lib/utils");
-
-module.exports.JWTauth = fn(async (req, res, next) => {
+const { fn, auth } = require("../lib/utils");
+// authorize
+module.exports.authorize = fn(async (req, res, next) => {
   // Get token from header
-  const auth = req.headers.authorization;
-  const token = auth && auth.split(" ")[1];
-  // Check if no token
-  if (!token) return next(new AppError("No token, authorization denied", 401));
+  const token = auth(req);
   // Verify token
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   if (!decoded) return next(new AppError("Invalid token", 401));
-  const user = await User.findById(decoded.id).select("+active");
+
+  const user = await User.findById(decoded._id).select("-password").exec();
+  // console.log("decoded", decoded);
   if (!user) return next(new AppError("User not found", 404));
   // Add user from payload
   req.user = decoded;
@@ -23,7 +22,6 @@ module.exports.JWTauth = fn(async (req, res, next) => {
 module.exports.isAdmin = fn(async (req, res, next) => {
   // Check user role
   const allowedRoles = ["admin", "manager", "moderator"];
-  console.log(req.user);
   if (req.user && allowedRoles.includes(req.user.role)) {
     next();
   } else {

@@ -36,4 +36,4 @@ CategorySchema.pre("save", function (next) {
 });
 const Category = mongoose.model("Category", CategorySchema);
 
-module.exports = {Category};
+module.exports = { Category };

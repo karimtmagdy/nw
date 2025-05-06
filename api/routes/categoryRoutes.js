@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { isAdmin, JWTauth } = require("../middleware/auth");
+const { isAdmin, authorize } = require("../middleware/auth");
 const {
   createCategory,
   deleteCategory,
@@ -16,13 +16,13 @@ const {
 
 router
   .route("/")
-  .post([JWTauth, isAdmin], validateCategory, createCategory)
+  .post([authorize, isAdmin], validateCategory, createCategory)
   .get(getAllCategories);
 
 router
   .route("/:id")
-  .delete([JWTauth, isAdmin], validateCategoryId, deleteCategory)
+  .delete([authorize, isAdmin], validateCategoryId, deleteCategory)
   .get(getCategoryById)
-  .patch([JWTauth, isAdmin], validateCategoryId, updateCategory);
+  .patch([authorize, isAdmin], validateCategoryId, updateCategory);
 
 module.exports = router;

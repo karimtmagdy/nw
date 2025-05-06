@@ -20,8 +20,6 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 connectDB();
 // API Routes
 handler(app);
-// app.use("/api/services", require("./api/routes/serviceRoutes"));
-// app.use("/api/users", require("./api/routes/userRoutes"));
 app.get("/", (req, res) => {
   res.send("Hello from API Express on Vercel");
 });

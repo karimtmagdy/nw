@@ -64,25 +64,26 @@ exports.login = fn(async (req, res, next) => {
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
       });
+      user.refreshToken = refreshToken;
     }
   );
   user.active = true;
   user.isOnline = "online";
   user.last_login = new Date();
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.refreshToken;
   await user.save();
   res.status(200).json({
     status: "success",
     message: "Logged in successfully",
     token,
-    user: {
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-    },
+    user: userObject,
   });
 });
-// @route   POST api/v1/auth/sign-in
-// @desc    Authenticate user & get token
+
+// @route   POST api/v1/auth/sign-out
+// @desc    Logout user & remove token
 // @access  Public
 exports.logout = fn(async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];

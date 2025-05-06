@@ -86,9 +86,18 @@ const UserSchema = new mongoose.Schema(
     remember_me: { type: Boolean, default: false, sparse: true },
     verified: { type: Boolean, default: false },
     photo: {
-      type: String,
-      default: undefined,
-      sparse: true,
+      type: Object,
+      url: {
+        type: String,
+        default:
+          "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png",
+        // sparse: true,
+      },
+      public_id: {
+        type: String,
+        default: undefined,
+        sparse: true,
+      },
     },
     tags: [{ type: mongoose.Types.ObjectId, ref: "tag", sparse: true }],
     cart: [{ type: mongoose.Types.ObjectId, ref: "cart", sparse: true }],
