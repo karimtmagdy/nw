@@ -5,12 +5,12 @@ const { validate } = require("../middleware/validate");
 const brandSchema = z.object({
   name: z
     .string()
-    .min(3, "Brand name must be at least 3 characters")
+    .min(2, "Brand name must be at least 2 characters")
     .max(50, "Brand name must not exceed 50 characters"),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must not exceed 500 characters"),
+    .max(500, "Description must not exceed 500 characters").optional(),
 });
 
 const validateBrandId = (req, res, next) => {
