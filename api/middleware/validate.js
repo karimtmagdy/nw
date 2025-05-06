@@ -1,7 +1,7 @@
+const { isValidObjectId } = require("mongoose");
 const { AppError } = require("./errorHandler");
 const { z } = require("zod");
-
-const validate = (schema) => (req, res, next) => {
+exports.validate = (schema) => (req, res, next) => {
   try {
     schema.parse(req.body);
     next();
@@ -12,4 +12,11 @@ const validate = (schema) => (req, res, next) => {
     next(error);
   }
 };
-module.exports = validate;
+
+exports.validID = (req, res, next) => {
+  const { id } = req.params;
+  if (!isValidObjectId(id)) {
+    return next(new AppError("invalid id", 400));
+  }
+  next();
+};

@@ -9,7 +9,7 @@ exports.createCategory = fn(async (req, res, next) => {
   const { name } = req.body;
   // Check if category already exists
   let category = await Category.findOne({ name });
-  if (category) return next(new AppError("Category already exists", 400));
+  if (category) return next(new AppError("category already exists", 400));
   category = await Category.create({ name });
   await category.save();
   res.status(201).json({
@@ -50,7 +50,7 @@ exports.updateCategory = fn(async (req, res, next) => {
     { $set: categoryFields },
     { new: true, runValidators: true }
   );
-  if (!category) return next(new AppError("Category not found", 404));
+  if (!category) return next(new AppError("category not found", 404));
   await category.save();
   res.status(200).json({
     status: "success",
@@ -64,7 +64,7 @@ exports.updateCategory = fn(async (req, res, next) => {
 // @access  Public
 exports.getCategoryById = fn(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
-  if (!category) return next(new AppError("Category not found", 404));
+  if (!category) return next(new AppError("category not found", 404));
   res.status(200).json({
     status: "success",
     category,
@@ -76,13 +76,9 @@ exports.getCategoryById = fn(async (req, res, next) => {
 // @access  Private/Admin
 exports.deleteCategory = fn(async (req, res, next) => {
   const category = await Category.findByIdAndDelete(req.params.id);
-  if (!category) return next(new AppError("Category not found", 404));
-  //   if (err.kind === "ObjectId") {
-  //     return res.status(404).json({ msg: "Category not found" });
-  //   }
-
+  if (!category) return next(new AppError("category not found", 404));
   res.status(200).json({
     status: "success",
-    message: "Category removed",
+    message: "category removed",
   });
 });

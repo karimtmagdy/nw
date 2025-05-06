@@ -13,6 +13,7 @@ const {
   validateCategory,
   validateCategoryId,
 } = require("../validator/category.validate");
+const { validID } = require("../middleware/validate");
 
 router
   .route("/")
@@ -22,7 +23,7 @@ router
 router
   .route("/:id")
   .delete([authorize, isAdmin], validateCategoryId, deleteCategory)
-  .get(getCategoryById)
+  .get(validID, getCategoryById)
   .patch([authorize, isAdmin], validateCategoryId, updateCategory);
 
 module.exports = router;
