@@ -34,6 +34,8 @@ CategorySchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
+
 const Category = mongoose.model("Category", CategorySchema);
 
+// Export the model for use in other file
 module.exports = { Category };

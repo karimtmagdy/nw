@@ -24,13 +24,31 @@ exports.createCategory = fn(async (req, res, next) => {
 exports.getAllCategories = fn(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const result = await paginate(Category, req.query, page, limit, {
-    //     isActive: true,
+  const skip = (page - 1) * limit;
+
+  const total = await Category.countDocuments();
+  const categories = await Category.find().skip(skip).limit(limit);
+
+  res.status(200).json({
+    // status: "success",
+    pagination: {
+      results: total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
+      hasNextPage: page < Math.ceil(total / limit),
+      hasPrevPage: page > 1,
+    },
+    categories,
   });
-  result.categories = result.data;
-  delete result.data;
-  if (!result) return next(new AppError("No categories found", 404));
-  res.status(200).json(result);
+
+  // const result = await paginate(Category, req.query, page, limit, {
+  //   //     isActive: true,
+  // });
+  // result.categories = result.data;
+  // delete result.data;
+  // if (!result) return next(new AppError("No categories found", 404));
+  // res.status(200).json(result);
 });
 
 // @route   PUT api/v1/categories/:id

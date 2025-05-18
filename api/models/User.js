@@ -32,6 +32,12 @@ const UserSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 20,
     },
+    name: {
+      type: Object, // or String, depending on your necessities
+      trim: true,
+      first_name: { type: String },
+      last_name: { type: String },
+    },
     email: {
       type: String,
       required: true,
@@ -102,6 +108,11 @@ const UserSchema = new mongoose.Schema(
     tags: [{ type: mongoose.Types.ObjectId, ref: "tag", sparse: true }],
     cart: [{ type: mongoose.Types.ObjectId, ref: "cart", sparse: true }],
     orders: [{ type: mongoose.Types.ObjectId, ref: "order", sparse: true }],
+
+    // wishlist: [{ type: Types.ObjectId, ref: "wishlist" }],
+    // likes: [{ type: Types.ObjectId, ref: "likes" }],
+    // favorite: [{ type: Types.ObjectId, ref: "favorite" }],
+    // permission: [{ type: Types.ObjectId, ref: "Permission" }],
   },
   { timestamps: { createdAt: "joinedAt" }, collection: "users" }
 );
@@ -126,3 +137,14 @@ const User = mongoose.model("User", UserSchema);
 
 // Export the model for use in other file
 module.exports = { User };
+// deletedAt: { type: Date, default: null },
+// resetPasswordToken: String,
+// resetPasswordExpireAt: Date,
+// forgotPassword: String,
+// forgotPasswordExpiry: Date,
+// verificationToken: String,
+// verificationTokenExpireAt: Date,
+// verifyOtp: { type: String, default: "" },
+// verifyOtpExpireAt: { type: Number, default: 0 },
+// resetOtp: { type: String, default: "" },
+// resetOtpExpireAt: { type: Number, default: 0 },

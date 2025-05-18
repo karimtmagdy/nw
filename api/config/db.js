@@ -5,10 +5,7 @@ exports.connectDB = () => {
   const MONGODB_URI = process.env.MONGO_URI;
   const db = process.env.DB_PASSWORD;
   mongoose
-    .connect(MONGODB_URI.replace("<PASSWORD>", String(db)), {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-    })
+    .connect(MONGODB_URI.replace("<PASSWORD>", String(db)))
     .then(() => console.log("MongoDB connected successfully"))
-    .catch((err) => console.error("MongoDB connection error:", err));
+    // .catch((err) => console.error("MongoDB connection error:", err));
 };
