@@ -31,12 +31,11 @@ exports.getAllCategories = fn(async (req, res, next) => {
 
   if (!categories) return next(new AppError("No categories found", 404));
   res.status(200).json({
-    pagination: {
-      results: total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit),
-    },
+    results: total,
+    page,
+    limit,
+    pages: Math.ceil(total / limit),
+    status: "success",
     categories,
   });
 
