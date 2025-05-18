@@ -29,6 +29,7 @@ exports.getAllCategories = fn(async (req, res, next) => {
   const total = await Category.countDocuments();
   const categories = await Category.find().skip(skip).limit(limit);
 
+  if (!categories) return next(new AppError("No categories found", 404));
   res.status(200).json({
     // status: "success",
     pagination: {
